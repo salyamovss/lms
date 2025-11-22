@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Редактировать курс</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;padding:20px}
+        label{display:block;margin-bottom:10px}
+        input[type="text"], textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:4px}
+        button{padding:8px 14px;border-radius:6px;background:#2d89ef;color:#fff;border:0}
+        a {margin-left:12px;color:#2d89ef}
+    </style>
+</head>
+<body>
+<h1>Редактировать курс</h1>
+
+<form id="form" method="post" action="">
+    <label>Название:
+        <input id="name" name="name" type="text" required />
+    </label>
+
+    <label>Описание:
+        <textarea id="description" name="description" rows="4"></textarea>
+    </label>
+
+    <button type="submit">Обновить</button>
+    <a href="list.html">Отмена</a>
+</form>
+
+<script>
+    (async function(){
+        // Получаем id из querystring ?id=...
+        const params = new URLSearchParams(location.search);
+        const id = params.get('id');
+        if (!id) {
+            alert('Не указан id');
+            location.href = 'list.htmlist.html';
+            return;
+        }
+
+        // Пытаемся загрузить данные курса с API
+        try {
+            const resp = await fetch(`/courses/${encodeURIComponent(id)}`, { credentials: 'same-origin' });
+            if (!resp.ok) throw new Error('not found');
+            const c = await resp.json();
+            document.getElementById('name').value = c.name || '';
+            document.getElementById('description').value = c.description || '';
+            // Подставляем action формы для обновления стандартным POST на /courses/{id}
+            document.getElementById('form').action = `/courses/${encodeURIComponent(id)}`;
+        } catch (e) {
+            console.info('Course fetch failed', e);
+            // если API нет — просто оставим форму пустой и установим action
+            document.getElementById('form').action = `/courses/${encodeURIComponent(id)}`;
+        }
+    })();
+</script>
+</body>
+</html>

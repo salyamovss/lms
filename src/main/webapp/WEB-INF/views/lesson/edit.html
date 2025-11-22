@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать урок</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        form { max-width: 400px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 15px; padding: 10px 15px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #1976D2; }
+        a { display: inline-block; margin-top: 10px; text-decoration: none; color: #333; }
+    </style>
+</head>
+<body>
+
+<h1>Редактировать урок</h1>
+
+<form id="editForm" method="post">
+    <label>Название:</label>
+    <input type="text" name="title" id="title" required>
+
+    <label>Описание:</label>
+    <textarea name="description" id="description" rows="4" required></textarea>
+
+    <label>Дата публикации:</label>
+    <input type="date" name="publisherDate" id="publisherDate" required>
+
+    <label>Курс:</label>
+    <select name="courseId" id="courseSelect" required></select>
+
+    <button type="submit">Обновить</button>
+</form>
+
+<a href="/lessons">Назад к списку</a>
+
+<script>
+    const path = window.location.pathname;
+    const id = path.split('/')[2];
+
+    // Получаем список курсов
+    fetch('/courses')
+        .then(res => res.json())
+        .then(courses => {
+            const select = document.getElementById('courseSelect');
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id;
+                option.textContent = course.title;
+                select.appendChild(option);
+            });
+        });
+
+    // Получаем данные урока
+    fetch(`/lessons/${id}`)
+        .then(res => res.json())
+        .then(lesson => {
+            document.getElementById('title').value = lesson.title;
+            document.getElementById('description').value = lesson.description;
+            document.getElementById('publisherDate').value = lesson.publisherDate;
+
+            const select = document.getElementById('courseSelect');
+            if (lesson.course) select.value = lesson.course.id;
+
+            document.getElementById('editForm').action = `/lessons/${id}`;
+        })
+        .catch(err => console.error('Ошибка загрузки урока:', err));
+</script>
+
+</body>
+</html>

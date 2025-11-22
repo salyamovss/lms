@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать инструктора</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Редактировать инструктора</h1>
+
+<form id="editForm" method="post">
+    <label>Имя:</label>
+    <input type="text" name="name" id="name" required>
+    <label>Email:</label>
+    <input type="email" name="email" id="email" required>
+    <button type="submit">Обновить</button>
+</form>
+
+<a href="/instructors">Назад к списку</a>
+
+<script>
+    const path = window.location.pathname;
+    const id = path.split('/')[2];
+
+    // Получаем данные инструктора через fetch
+    fetch(`/instructors/${id}`)
+        .then(res => res.json())
+        .then(instr => {
+            document.getElementById('name').value = instr.name;
+            document.getElementById('email').value = instr.email;
+            document.getElementById('editForm').action = `/instructors/${id}`;
+        })
+        .catch(err => console.error('Ошибка загрузки инструктора:', err));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Создать курс</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;padding:20px}
+        label{display:block;margin-bottom:10px}
+        input[type="text"], textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:4px}
+        button{padding:8px 14px;border-radius:6px;background:#2d89ef;color:#fff;border:0}
+        a {margin-left:12px;color:#2d89ef}
+    </style>
+</head>
+<body>
+<h1>Создать курс</h1>
+
+<!-- Форма отправляет POST на /courses — оставил стандартную форму,
+     чтобы сервер без JS тоже мог принять данные -->
+<form id="form" method="post" action="/courses">
+    <label>Название:
+        <input name="name" type="text" required />
+    </label>
+
+    <label>Описание:
+        <textarea name="description" rows="4"></textarea>
+    </label>
+
+    <button type="submit">Сохранить</button>
+    <a href="list.html">Отмена</a>
+</form>
+
+<script>
+    /*
+      Опционально: перехват формы и отправка через fetch в JSON (если бэкенд принимает JSON).
+      В большинстве старых MVC приложений POST /courses будет работать без JS, поэтому
+      этот код просто сохраняем для примера и не мешаем стандартной отправке.
+    */
+    document.getElementById('form').addEventListener('submit', async function(ev){
+        // если хочешь использовать fetch -> раскомментируй ниже и закомментируй return
+        // ev.preventDefault();
+        // const fd = new FormData(this);
+        // const payload = Object.fromEntries(fd.entries());
+        // const resp = await fetch('/api/courses', {
+        //   method: 'POST',
+        //   headers: {'Content-Type':'application/json'},
+        //   body: JSON.stringify(payload),
+        //   credentials: 'same-origin'
+        // });
+        // if (resp.ok) location.href = 'list.html';
+        // else alert('Ошибка сохранения');
+    });
+</script>
+</body>
+</html>
